@@ -1,35 +1,59 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Video dengan Iklan</title>
-</head>
-<body>
 
-<video id="video" width="640" controls>
-    <source src="video.mp4" type="video/mp4">
-</video>
+import streamlit as st
+import pandas as pd
 
-<script>
-const video = document.getElementById("");
-let sudahKlik = false;
+st.set_page_config(
+    page_title="Analisis Lalu Lintas",
+    page_icon="🚗",
+    layout="wide"
+)
 
-video.addEventListener("play", function(e) {
-    if (!sudahKlik) {
-        e.preventDefault();
-        video.pause();
+st.title("Program Analisis Lalu Lintas")
+st.write("Aplikasi untuk menghitung jumlah kendaraan.")
 
-        sudahKlik = true;
+st.subheader("Input Data Kendaraan")
 
-        // Buka halaman iklan
-        window.open("https://s.shopee.co.id/LlEukSlwy", "_blank");
+sepeda_motor = st.number_input(
+    "Jumlah sepeda motor",
+    min_value=0,
+    value=204
+)
 
-        // Putar video setelah 2 detik
-        setTimeout(() => {
-            video.play();
-        }, 2000);
-    }
-});
-</script>
+kendaraan_ringan = st.number_input(
+    "Jumlah kendaraan ringan",
+    min_value=0,
+    value=82
+)
 
-</body>
-</html>
+kendaraan_berat = st.number_input(
+    "Jumlah kendaraan berat",
+    min_value=0,
+    value=41
+)
+
+total = sepeda_motor + kendaraan_ringan + kendaraan_berat
+
+st.subheader("Hasil Analisis")
+
+st.metric("Total Kendaraan", total)
+
+data = pd.DataFrame({
+    "Jenis Kendaraan": [
+        "Sepeda Motor",
+        "Kendaraan Ringan",
+        "Kendaraan Berat"
+    ],
+    "Jumlah": [
+        sepeda_motor,
+        kendaraan_ringan,
+        kendaraan_berat
+    ]
+})
+
+st.bar_chart(
+    data,
+    x="Jenis Kendaraan",
+    y="Jumlah"
+)
+
+st.dataframe(data, use_container_width=True)
